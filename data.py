@@ -229,6 +229,9 @@ class dataProcess(object):
             print('loading done')
 
 		#if not os.path.isfile(fname):
+        if not os.path.exists(self.npy_path ):
+            os.makedirs(self.npy_path)
+            print("Created path " + str(self.npy_path))
 
         np.save(self.npy_path + '/imgs_train.npy', imgdatas)
         np.save(self.npy_path + '/imgs_mask_train.npy', imglabels)
@@ -313,20 +316,7 @@ if __name__ == "__main__":
 # This first function will peform data transformations
     #performAug()
 # everything into a single npy file (one for train/label and test/label)
-    create_npys()
-
-    #imgs = glob.glob("data/aug_train/1"+"/*."+"tif")
-    #print(len(imgs))
-    #img = load_img("data/aug_train" + "/" + midname,grayscale = True)
-    #print(len(img))
-
-    def move(destination, depth=None):
-        if not depth:
-            depth = []
-        for file_or_dir in os.listdir(os.path.join([destination] + depth, os.sep)):
-            if os.path.isfile(file_or_dir):
-                shutil.move(file_or_dir, destination)
-            else:
-                move(destination, os.path.join(depth + [file_or_dir], os.sep))
-
-    #move("data/aug_merge",)
+    #create_npys()
+    import tensorflow as tf
+    sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+    print(sess)

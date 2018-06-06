@@ -150,20 +150,25 @@ class myUnet(object):
 
 
 	def train(self):
-
+		print('-'*30)
 		print("loading data")
 		imgs_train, imgs_mask_train, imgs_test = self.load_data()
 		print("loading data done")
+		print('-'*30)
 		model = self.get_unet()
-		print("got unet")
-
+		print("GOT UNET")
+		print(model.summary())
+		print('-'*30)
 		model_checkpoint = ModelCheckpoint('unet.hdf5', monitor='loss',verbose=1, save_best_only=True)
 		print('Fitting model...')
-		model.fit(imgs_train, imgs_mask_train, batch_size=50, nb_epoch=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
+		model.fit(imgs_train, imgs_mask_train, batch_size=2, epochs=10, verbose=1,validation_split=0.2, shuffle=True, callbacks=[model_checkpoint])
 
 		print('predict test data')
-		imgs_mask_test = model.predict(imgs_test, batch_size=1, verbose=1)
-		np.save('/results/imgs_mask_test.npy', imgs_mask_test)
+		imgs_mask_test = model.predict(imgs_test, batch_size=2, verbose=1)
+		if not os.path.exists('results/imgs_mask_test.npy'):
+			os.makedirs('results/imgs_mask_test.npy')
+			print("Created path " + str('results/imgs_mask_test.npy'))
+		np.save('results/imgs_mask_test.npy', imgs_mask_test)
 
 	def save_img(self):
 
@@ -172,7 +177,7 @@ class myUnet(object):
 		for i in range(imgs.shape[0]):
 			img = imgs[i]
 			img = array_to_img(img)
-			img.save("/results/%d.jpg"%(i))
+			img.save("results/%d.jpg"%(i))
 
 
 
